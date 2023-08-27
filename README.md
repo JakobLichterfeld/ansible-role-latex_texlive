@@ -2,13 +2,13 @@
 
 Install LaTeX TeX Live via DVD download.
 
-* Download and verify (sha512) the specified Tex Live DVD ISO
-* Install GUI for Installer
-* Mount the ISO and install TeX Live from mounted ISO with given options
-* Adjust the Path
-* Add CTAN repo to TeX Live
-* Prevent TeX Live packages from being installed as a dependency by the package manager with the help of a downloaded equivs file
-* Remove texlive-doc packages (configurable)
+- Download and verify (sha512) the specified Tex Live DVD ISO
+- Install GUI for Installer
+- Mount the ISO and install TeX Live from mounted ISO with given options
+- Adjust the Path
+- Add CTAN repo to TeX Live
+- Prevent TeX Live packages from being installed as a dependency by the package manager with the help of a downloaded equivs file
+- Remove texlive-doc packages (configurable)
 
 ## Requirements
 

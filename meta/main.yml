@@ -5,15 +5,15 @@ galaxy_info:
   author: JakobLichterfeld
   description: Install LaTeX Tex Live via DVD download
 
-  homepage: https://github.com/JakobLichterfeld/infra-playbook
-  issue_tracker_url: https://github.com/JakobLichterfeld/infra-playbook/issues
+  homepage: https://github.com/JakobLichterfeld/ansible-role-latex_texlive
+  issue_tracker_url: https://github.com/JakobLichterfeld/ansible-role-latex_texlive/issues
 
   license: MIT
   min_ansible_version: 2.1
 
   platforms:
   - name: Ubuntu
-    release:
+    versions:
       - jammy
 
   galaxy_tags:
