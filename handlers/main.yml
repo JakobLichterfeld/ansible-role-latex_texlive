@@ -1,0 +1,9 @@
+---
+# handlers file for latex_texlive
+- name: Apply changes to path directly
+  become: true
+  become_user: "{{ ansible_user }}"
+  ansible.builtin.command:
+    cmd: "source /etc/profile"
+  register: source_result
+  changed_when: source_result.stdout != ""

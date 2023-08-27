@@ -1,0 +1,23 @@
+---
+galaxy_info:
+  role_name: latex_texlive
+  version: 1.0.0
+  author: JakobLichterfeld
+  description: Install LaTeX Tex Live via DVD download
+
+  homepage: https://github.com/JakobLichterfeld/infra-playbook
+  issue_tracker_url: https://github.com/JakobLichterfeld/infra-playbook/issues
+
+  license: MIT
+  min_ansible_version: 2.1
+
+  platforms:
+  - name: Ubuntu
+    release:
+      - jammy
+
+  galaxy_tags:
+    - latex
+    - texlive
+
+dependencies: []

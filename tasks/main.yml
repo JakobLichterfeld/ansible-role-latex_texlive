@@ -1,0 +1,116 @@
+---
+# tasks file for latex_texlive
+- name: Install LaTeX TeX Live
+  block:
+    - name: Install LaTeX - Create LaTeX TeX Live DVD download dir on remote host if it does not exist
+      ansible.builtin.file:
+        path: "{{ latex_texlive.download_dir_on_remote_host }}/latex_texlive_dvd"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: Install LaTeX - download TeX Live DVD
+      become: true
+      become_user: "{{ ansible_user }}"
+      ansible.builtin.get_url:
+        url: "https://ftp.mpi-inf.mpg.de/pub/tex/mirror/ftp.dante.de/pub/tex/systems/texlive/Images/texlive{{ latex_texlive.texlive.version }}.iso"
+        dest: "{{ latex_texlive.download_dir_on_remote_host }}/latex_texlive_dvd/texlive{{ latex_texlive.texlive.version }}.iso"
+        checksum: sha512:https://ftp.mpi-inf.mpg.de/pub/tex/mirror/ftp.dante.de/pub/tex/systems/texlive/Images/texlive{{ latex_texlive.texlive.version }}.iso.sha512
+      register: latex_texlive_dvd_iso
+
+    - name: Install LaTeX - Install GUI for TeX Live Manager
+      ansible.builtin.package:
+        name:
+          - perl-tk
+        state: present
+
+    - name: Install LaTeX - Create LaTeX TeX Live DVD mount dir on remote host if it does not exist
+      ansible.builtin.file:
+        path: "/mnt/texlive{{ latex_texlive.texlive.version }}"
+        state: directory
+        owner: root
+        group: root
+
+    - name: Install LaTeX - mount TeX Live DVD
+      ansible.posix.mount:
+        path: "/mnt/texlive{{ latex_texlive.texlive.version }}"
+        src: "{{ latex_texlive.download_dir_on_remote_host }}/latex_texlive_dvd/texlive{{ latex_texlive.texlive.version }}.iso"
+        fstype: iso9660
+        state: mounted
+      when: latex_texlive_dvd_iso.changed
+
+    - name: Install LaTeX - install TeX Live DVD
+      ansible.builtin.command:
+        cmd: "perl /mnt/texlive{{ latex_texlive.texlive.version }}/install-tl --no-interaction {{ latex_texlive.texlive.install_options }}"
+      when: latex_texlive_dvd_iso.changed
+
+    - name: Install LaTeX - change ownership of install directory
+      ansible.builtin.file:
+        path: /usr/local/texlive/{{ latex_texlive.texlive.version }}
+        state: directory
+        recurse: yes
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: Install LaTeX - adjust path
+      ansible.builtin.template:
+        src: texlive.sh.j2
+        dest: /etc/profile.d/texlive.sh
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Apply changes to path directly
+
+    - meta: flush_handlers
+
+    - name: Install LaTeX - add remote repository
+      become: true
+      become_user: "{{ ansible_user }}"
+      ansible.builtin.command:
+        cmd: "tlmgr option repository http://mirror.ctan.org/systems/texlive/tlnet"
+      when: latex_texlive_dvd_iso.changed
+
+    - name: Install LaTeX - prevent TeX Live packages from being installed as a dependency by the package manager
+      ansible.builtin.package:
+        name:
+          - tex-common
+          - texinfo
+          - equivs
+          - perl-doc
+          - freeglut3
+        state: present
+
+    - name: Install LaTeX - Create LaTeX equivs download dir on remote host if it does not exist
+      ansible.builtin.file:
+        path: "{{ latex_texlive.download_dir_on_remote_host }}/latex_texlive_equivs"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: Install LaTeX - download LaTeX equivs
+      become: true
+      become_user: "{{ ansible_user }}"
+      ansible.builtin.get_url:
+        url: "https://www.tug.org/texlive/files/debian-equivs-{{ latex_texlive.equivs.version }}-ex.txt"
+        dest: "{{ latex_texlive.download_dir_on_remote_host }}/latex_texlive_equivs/debian-equivs-{{ latex_texlive.equivs.version }}-ex.txt"
+      register: latex_texlive_equivs_file
+
+    - name: Install LaTeX - build LaTeX equivs
+      ansible.builtin.command:
+        chdir: "{{ latex_texlive.download_dir_on_remote_host }}/latex_texlive_equivs"
+        cmd: "equivs-build debian-equivs-{{ latex_texlive.equivs.version }}-ex.txt"
+      register: equivs_build
+      when: latex_texlive_equivs_file.changed
+
+    - name: Install LaTeX - install LaTeX equivs
+      ansible.builtin.apt:
+        deb: "{{ latex_texlive.download_dir_on_remote_host }}/latex_texlive_equivs/texlive-local_{{ latex_texlive.equivs.version }}.99999999-1_all.deb"
+        state: present
+      when: equivs_build.changed
+
+    - name: Install LaTeX - remove texlive doc packages
+      ansible.builtin.package:
+        name:
+          - "texlive-*-doc"
+        state: absent
+      when: remove_texlive_doc
