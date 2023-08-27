@@ -20,7 +20,7 @@ Available variables are listed below, along with default values (see `defaults/m
 
 | Name           | Default Value   | Description                        |
 | -------------- | --------------- | -----------------------------------|
-| `latex_texlive.download_dir_on_remote_host` | "/home/{{ ansible_user }}/Downloads/automatically_by_ansible_playbook" | Download Directory on Remote Host |
+| `download_dir_on_remote_host` | "/home/{{ ansible_user }}/Downloads/automatically_by_ansible_playbook" | Download Base Directory on Remote Host |
 | `latex_texlive.texlive.version` | "2023" | TeX Live Version you want to install |
 | `latex_texlive.texlive.install_options` | "--paper=a4 --no-doc-install --no-src-install" | Additional TeX Live installation options you want to use |
 | `latex_texlive.equivs.version` | "2022" | Equivs version to use to prevent TeX Live packages from being installed as a dependency by the package manager |
