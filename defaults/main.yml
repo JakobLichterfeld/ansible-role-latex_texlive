@@ -1,7 +1,7 @@
 ---
 # defaults file for latex_texlive
 latex_texlive:
-  download_dir_on_remote_host: "{{ download_dir_on_remote_host }}"
+  download_dir_on_remote_host: "/home/{{ ansible_user }}/Downloads/automatically_by_ansible_playbook"
   texlive:
     version: "2023"
     install_options: "--paper=a4 --no-doc-install --no-src-install"
