@@ -16,6 +16,9 @@
         url: "https://ftp.mpi-inf.mpg.de/pub/tex/mirror/ftp.dante.de/pub/tex/systems/texlive/Images/texlive{{ latex_texlive.texlive.version }}.iso"
         dest: "{{ download_dir_on_remote_host }}/latex_texlive_dvd/texlive{{ latex_texlive.texlive.version }}.iso"
         checksum: sha512:https://ftp.mpi-inf.mpg.de/pub/tex/mirror/ftp.dante.de/pub/tex/systems/texlive/Images/texlive{{ latex_texlive.texlive.version }}.iso.sha512
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0644'
       register: latex_texlive_dvd_iso
 
     - name: Install GUI for TeX Live Manager
@@ -40,6 +43,7 @@
       when: latex_texlive_dvd_iso.changed
 
     - name: Install TeX Live DVD
+      #command, as this is the only way to run perl installer scripts in Ansible.
       ansible.builtin.command:
         cmd: "perl /mnt/texlive{{ latex_texlive.texlive.version }}/install-tl --no-interaction {{ latex_texlive.texlive.install_options }}"
       when: latex_texlive_dvd_iso.changed
@@ -66,6 +70,7 @@
     - name: Add remote repository
       become: true
       become_user: "{{ ansible_user }}"
+      #command, as this is the only way to tlmgr in Ansible.
       ansible.builtin.command:
         cmd: "tlmgr option repository http://mirror.ctan.org/systems/texlive/tlnet"
       when: latex_texlive_dvd_iso.changed
@@ -93,9 +98,13 @@
       ansible.builtin.get_url:
         url: "https://www.tug.org/texlive/files/debian-equivs-{{ latex_texlive.equivs.version }}-ex.txt"
         dest: "{{ download_dir_on_remote_host }}/latex_texlive_equivs/debian-equivs-{{ latex_texlive.equivs.version }}-ex.txt"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0644'
       register: latex_texlive_equivs_file
 
     - name: Build LaTeX equivs
+      #command, as this is the only way to build equivs in Ansible.
       ansible.builtin.command:
         chdir: "{{ download_dir_on_remote_host }}/latex_texlive_equivs"
         cmd: "equivs-build debian-equivs-{{ latex_texlive.equivs.version }}-ex.txt"
@@ -113,4 +122,4 @@
         name:
           - "texlive-*-doc"
         state: absent
-      when: latex_texlive.remove_texlive_doc
+      when: latex_texlive.remove_texlive_doc | bool

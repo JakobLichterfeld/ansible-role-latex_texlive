@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   role_name: latex_texlive
-  version: 1.0.0
+  version: 1.0.1
   author: JakobLichterfeld
   description: Install LaTeX Tex Live via DVD download
 
