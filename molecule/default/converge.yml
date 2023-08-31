@@ -12,4 +12,4 @@
   tasks:
     - name: Testing role
       ansible.builtin.include_role:
-        name: jakoblichterfeld.android_studio
+        name: jakoblichterfeld.latex_texlive
