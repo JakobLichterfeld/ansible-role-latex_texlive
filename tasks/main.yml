@@ -8,6 +8,7 @@
         state: directory
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
+        mode: '0755'
 
     - name: Download TeX Live DVD
       become: true
@@ -16,6 +17,7 @@
         url: "https://ftp.mpi-inf.mpg.de/pub/tex/mirror/ftp.dante.de/pub/tex/systems/texlive/Images/texlive{{ latex_texlive.texlive.version }}.iso"
         dest: "{{ download_dir_on_remote_host }}/latex_texlive_dvd/texlive{{ latex_texlive.texlive.version }}.iso"
         checksum: sha512:https://ftp.mpi-inf.mpg.de/pub/tex/mirror/ftp.dante.de/pub/tex/systems/texlive/Images/texlive{{ latex_texlive.texlive.version }}.iso.sha512
+        timeout: 60
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: '0644'
@@ -33,6 +35,7 @@
         state: directory
         owner: root
         group: root
+        mode: '0755'
 
     - name: Mount TeX Live DVD
       ansible.posix.mount:
@@ -43,9 +46,10 @@
       when: latex_texlive_dvd_iso.changed
 
     - name: Install TeX Live DVD
-      #command, as this is the only way to run perl installer scripts in Ansible.
+      # command, as this is the only way to run perl installer scripts in Ansible.
       ansible.builtin.command:
         cmd: "perl /mnt/texlive{{ latex_texlive.texlive.version }}/install-tl --no-interaction {{ latex_texlive.texlive.install_options }}"
+      changed_when: true # avoid lint error: no-changed-when
       when: latex_texlive_dvd_iso.changed
 
     - name: Change ownership of install directory
@@ -55,6 +59,7 @@
         recurse: yes
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
+        mode: '0755'
 
     - name: Adjust path
       ansible.builtin.template:
@@ -65,14 +70,16 @@
         mode: '0644'
       notify: Apply changes to path directly
 
-    - meta: flush_handlers
+    - name: Flush Handlers
+      ansible.builtin.meta: flush_handlers
 
     - name: Add remote repository
       become: true
       become_user: "{{ ansible_user }}"
-      #command, as this is the only way to tlmgr in Ansible.
+      # command, as this is the only way to tlmgr in Ansible.
       ansible.builtin.command:
         cmd: "tlmgr option repository http://mirror.ctan.org/systems/texlive/tlnet"
+      changed_when: true # avoid lint error: no-changed-when
       when: latex_texlive_dvd_iso.changed
 
     - name: Prevent TeX Live packages from being installed as a dependency by the package manager
@@ -91,6 +98,7 @@
         state: directory
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
+        mode: '0755'
 
     - name: Download LaTeX equivs
       become: true
@@ -98,16 +106,18 @@
       ansible.builtin.get_url:
         url: "https://www.tug.org/texlive/files/debian-equivs-{{ latex_texlive.equivs.version }}-ex.txt"
         dest: "{{ download_dir_on_remote_host }}/latex_texlive_equivs/debian-equivs-{{ latex_texlive.equivs.version }}-ex.txt"
+        timeout: 60
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: '0644'
       register: latex_texlive_equivs_file
 
     - name: Build LaTeX equivs
-      #command, as this is the only way to build equivs in Ansible.
+      # command, as this is the only way to build equivs in Ansible.
       ansible.builtin.command:
         chdir: "{{ download_dir_on_remote_host }}/latex_texlive_equivs"
         cmd: "equivs-build debian-equivs-{{ latex_texlive.equivs.version }}-ex.txt"
+        creates: "{{ download_dir_on_remote_host }}/latex_texlive_equivs/texlive-local_{{ latex_texlive.equivs.version }}.99999999-1_all.deb"
       register: equivs_build
       when: latex_texlive_equivs_file.changed
 

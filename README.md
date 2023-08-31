@@ -1,5 +1,8 @@
 # Ansible Role: LaTeX TeX Live
 
+[![CI](https://github.com/JakobLichterfeld/ansible-role-latex_texlive/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/JakobLichterfeld/ansible-role-latex_texlive/actions/workflows/ci.yml)
+[![Publish role on Ansible Galaxy](https://github.com/JakobLichterfeld/ansible-role-latex_texlive/actions/workflows/publish_role_on_ansible_galaxy.yml/badge.svg?branch=main)](https://github.com/JakobLichterfeld/ansible-role-latex_texlive/actions/workflows/publish_role_on_ansible_galaxy.yml)
+
 Install LaTeX TeX Live via DVD download.
 
 - Download and verify (sha512) the specified Tex Live DVD ISO
@@ -35,7 +38,7 @@ None.
 ```yaml
 ---
 - hosts: all
-  gather_facts: yes
+  gather_facts: true
   become: true
 
   roles:

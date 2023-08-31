@@ -1,0 +1,15 @@
+---
+name: "Lint"
+description: "Lint"
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+
+    - name: Install lint dependencies
+      shell: bash
+      run: pip3 install yamllint
+
+    - name: Lint code
+      shell: bash
+      run: yamllint .

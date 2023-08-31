@@ -2,7 +2,7 @@
 # handlers file for latex_texlive
 - name: Apply changes to path directly
   become: true
-  #command because "source <file>" only works as `sudo -u <username> -s source <file>' in Ansible.
+  # command because "source <file>" only works as `sudo -u <username> -s source <file>' in Ansible.
   ansible.builtin.command:
     cmd: "sudo -u {{ ansible_user }} -s source /etc/profile"
   register: source_result

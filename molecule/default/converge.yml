@@ -1,0 +1,15 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  become: true
+
+  pre_tasks:
+    - name: Populate ansible user name
+      ansible.builtin.set_fact:
+        ansible_user: "root"
+
+  tasks:
+    - name: Testing role
+      ansible.builtin.include_role:
+        name: jakoblichterfeld.android_studio

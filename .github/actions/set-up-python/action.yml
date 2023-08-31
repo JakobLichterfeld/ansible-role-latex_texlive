@@ -1,0 +1,12 @@
+---
+name: 'Set up Python'
+description: 'Set up Python'
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
