@@ -78,6 +78,7 @@
       become_user: "{{ ansible_user }}"
       # command, as this is the only way to tlmgr in Ansible.
       ansible.builtin.command:
+        chdir: "/usr/local/texlive/{{ latex_texlive.texlive.version }}/bin/{{ ansible_architecture }}-linux/"
         cmd: "tlmgr option repository http://mirror.ctan.org/systems/texlive/tlnet"
       changed_when: true # avoid lint error: no-changed-when
       when: latex_texlive_dvd_iso.changed
