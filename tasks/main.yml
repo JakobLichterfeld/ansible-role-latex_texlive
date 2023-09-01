@@ -50,6 +50,7 @@
       ansible.builtin.command:
         cmd: "perl /mnt/texlive{{ latex_texlive.texlive.version }}/install-tl --no-interaction {{ latex_texlive.texlive.install_options }}"
       changed_when: true # avoid lint error: no-changed-when
+      register: latex_texlive_installation
       when: latex_texlive_dvd_iso.changed
 
     - name: Change ownership of install directory
@@ -57,9 +58,10 @@
         path: /usr/local/texlive/{{ latex_texlive.texlive.version }}
         state: directory
         recurse: yes
-        owner: "root"
-        group: "root"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
         mode: '0755'
+      when: latex_texlive_installation.changed
 
     - name: Adjust path
       ansible.builtin.template:
