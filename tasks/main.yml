@@ -131,9 +131,11 @@
       when: latex_texlive_equivs_file.changed
 
     - name: Install LaTeX equivs
-      ansible.builtin.apt:
-        deb: "{{ download_dir_on_remote_host }}/latex_texlive_equivs/texlive-local_{{ latex_texlive.equivs.version }}.99999999-1_all.deb"
-        state: present
+      # command as ansible.builtin.package does not like equivs builds
+      become: true
+      ansible.builtin.cmd:
+        cmd: "dpkg -i {{ download_dir_on_remote_host }}/latex_texlive_equivs/texlive-local_{{ latex_texlive.equivs.version }}.99999999-1_all.deb"
+      changed_when: true # avoid lint error: no-changed-when
       when: equivs_build.changed
 
     - name: Remove texlive doc packages
