@@ -57,16 +57,16 @@
         path: /usr/local/texlive/{{ latex_texlive.texlive.version }}
         state: directory
         recurse: yes
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
+        owner: "root"
+        group: "root"
         mode: '0755'
 
     - name: Adjust path
       ansible.builtin.template:
         src: texlive.sh.j2
         dest: /etc/profile.d/texlive.sh
-        owner: root
-        group: root
+        owner: "root"
+        group: "root"
         mode: '0644'
       notify: Apply changes to path directly
 
