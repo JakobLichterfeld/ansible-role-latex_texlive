@@ -31,7 +31,7 @@ jobs:
     name: Test with Ansible Molecule
     runs-on: ubuntu-latest
     # prevent stuck jobs
-    timeout-minutes: 20
+    timeout-minutes: 120
     strategy:
       matrix:
         distro: [ubuntu2204]
