@@ -133,7 +133,7 @@
     - name: Install LaTeX equivs
       # command as ansible.builtin.package does not like equivs builds
       become: true
-      ansible.builtin.cmd:
+      ansible.builtin.command:
         cmd: "dpkg -i {{ download_dir_on_remote_host }}/latex_texlive_equivs/texlive-local_{{ latex_texlive.equivs.version }}.99999999-1_all.deb"
       changed_when: true # avoid lint error: no-changed-when
       when: equivs_build.changed
