@@ -112,6 +112,15 @@
         mode: '0644'
       register: latex_texlive_equivs_file
 
+    - name: Control LaTeX equivs
+      # command, as this is the only way to build equivs in Ansible.
+      ansible.builtin.command:
+        chdir: "{{ download_dir_on_remote_host }}/latex_texlive_equivs"
+        cmd: "equivs-control debian-equivs-{{ latex_texlive.equivs.version }}-ex.txt"
+        creates: "{{ download_dir_on_remote_host }}/latex_texlive_equivs/texlive-local_{{ latex_texlive.equivs.version }}.99999999-1_all.deb"
+      register: equivs_control
+      when: latex_texlive_equivs_file.changed
+
     - name: Build LaTeX equivs
       # command, as this is the only way to build equivs in Ansible.
       ansible.builtin.command:
