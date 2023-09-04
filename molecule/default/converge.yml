@@ -12,7 +12,7 @@
     - name: Update apt cache
       ansible.builtin.apt:
         update_cache: yes
-        cache_valid_time: 600
+        cache_valid_time: 1800
       when: ansible_os_family == "Debian"
 
     - name: Wait for systemd to complete initialization.  # noqa: command-instead-of-module
