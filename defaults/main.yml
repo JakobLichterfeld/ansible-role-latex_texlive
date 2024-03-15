@@ -4,7 +4,7 @@ download_dir_on_remote_host: "/home/{{ ansible_user }}/Downloads/automatically_b
 
 latex_texlive:
   texlive:
-    version: "2023"
+    version: "2024"
     install_options: "--paper=a4 --no-doc-install --no-src-install"
   equivs:
     version: "2022"
