@@ -34,7 +34,7 @@ jobs:
     timeout-minutes: 120
     strategy:
       matrix:
-        distro: [ubuntu2204]
+        distro: [ubuntu2404]
     steps:
       - uses: actions/checkout@v4
 
