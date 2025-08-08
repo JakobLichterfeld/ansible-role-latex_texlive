@@ -8,4 +8,4 @@ runs:
 
     - name: Set up Ansible
       shell: bash
-      run: pip3 install ansible-core
+      run: pip3 install ansible
