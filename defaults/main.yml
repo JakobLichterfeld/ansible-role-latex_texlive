@@ -7,5 +7,5 @@ latex_texlive:
     version: "2025"
     install_options: "--paper=a4 --no-doc-install --no-src-install"
   equivs:
-    version: "2022"
+    version: "2023"
   remove_texlive_doc: true

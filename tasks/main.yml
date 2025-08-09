@@ -91,7 +91,6 @@
           - texinfo
           - equivs
           - perl-doc
-          - freeglut3
         state: present
 
     - name: Create LaTeX equivs download dir on remote host if it does not exist
