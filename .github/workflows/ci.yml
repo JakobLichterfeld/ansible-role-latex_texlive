@@ -18,7 +18,7 @@ jobs:
     # prevent stuck jobs
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python
         uses: ./.github/actions/set-up-python
@@ -36,7 +36,7 @@ jobs:
       matrix:
         distro: [ubuntu2404]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python
         uses: ./.github/actions/set-up-python
